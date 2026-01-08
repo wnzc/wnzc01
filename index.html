@@ -105,6 +105,7 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             cursor: pointer;
             transition: background 0.2s;
+            position: relative; /* 为了让 select 绝对定位 */
         }
 
         .picker-box:active {
@@ -230,6 +231,7 @@
             height: 100%;
             opacity: 0;
             cursor: pointer;
+            appearance: none; /* 移除默认样式 */
         }
     </style>
 </head>
