@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>蜗牛工具箱</title>
+    <!-- 引入 FontAwesome 图标库 (用于辅助图标) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-sub: rgba(255, 255, 255, 0.6);
+            --accent-color: #ff9800; /* 橙色点缀 */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px; /* 限制最大宽度，模拟手机App体验 */
+        }
+
+        /* 顶部 Logo 区域 */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            margin-top: 20px;
+        }
+
+        /* Logo 图片样式 */
+        .logo-img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain; /* 保持图片比例，不拉伸 */
+            border-radius: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            background: rgba(255,255,255,0.1); /* 图片未加载时的背景 */
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 5px;
+            background: linear-gradient(to right, #fff, #b0b0b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            color: var(--text-sub);
+        }
+
+        /* 工具列表 */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 两列布局 */
+            gap: 15px;
+        }
+
+        /* 工具卡片 */
+        .tool-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+        }
+
+        .tool-card:active {
+            transform: scale(0.96);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* 卡片内图片样式 */
+        .card-icon-img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            border-radius: 12px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .card-desc {
+            font-size: 12px;
+            color: var(--text-sub);
+            margin-top: 4px;
+        }
+
+        /* 装饰圆点 */
+        .decoration-dot {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tool-card:hover .decoration-dot {
+            opacity: 1;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 头部：Logo + 标题 -->
+        <div class="header">
+            <!-- 替换这里：将你的工具箱Logo图片命名为 logo_toolbox.png -->
+            <img src="logo_toolbox.png" alt="工具箱Logo" class="logo-img" onerror="this.style.display='none'">
+            
+            <h1 class="title">蜗牛工具箱</h1>
+            <p class="subtitle">实用工具 · 一触即达</p>
+        </div>
+
+        <!-- 工具列表 -->
+        <div class="tools-grid">
+            
+            <!-- 工具 1: 今日油价 -->
+            <a href="oil-price.html" class="tool-card">
+                <div class="decoration-dot"></div>
+                <!-- 替换这里：将你的油价蜗牛图片命名为 icon_oil.png -->
+                <img src="icon_oil.png" alt="今日油价" class="card-icon-img" onerror="this.src='https://via.placeholder.com/60?text=Icon'">
+                <div class="card-title">今日油价</div>
+                <div class="card-desc">全国实时油价查询</div>
+            </a>
+
+            <!-- 工具 2: 占位符 (你可以复制这个块添加更多工具) -->
+            <!-- 
+            <a href="#" class="tool-card">
+                <div class="decoration-dot"></div>
+                <img src="icon_calendar.png" alt="万年历" class="card-icon-img">
+                <div class="card-title">万年历</div>
+                <div class="card-desc">节假日查询</div>
+            </a> 
+            -->
+
+        </div>
+    </div>
+
+</body>
+</html>
