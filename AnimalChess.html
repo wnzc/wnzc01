@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动物棋</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #222;
+            color: #fff;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            width: 90vw;
+            max-width: 420px;
+            margin-top: 20px;
+        }
+
+        .cell {
+            aspect-ratio: 3 / 2;
+            perspective: 800px;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform .4s;
+        }
+
+        .open {
+            transform: rotateY(180deg);
+        }
+
+        .face,
+        .back {
+            position: absolute;
+            inset: 0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backface-visibility: hidden;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .back {
+            background: #555;
+        }
+
+        .face {
+            transform: rotateY(180deg);
+        }
+
+        .red {
+            background: #b33;
+        }
+
+        .blue {
+            background: #3366cc;
+        }
+
+        .selected {
+            outline: 3px solid yellow;
+        }
+
+        .moveable {
+            outline: 3px solid #00ff88;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>动物棋</h2>
+    <p id="info">翻一张牌开始</p>
+    <div id="board"></div>
+
+    <script>
+        const animals = ["象", "狮", "虎", "豹", "狼", "狗", "猫", "鼠"];
+        const beats = {
+            象: ["狮", "虎", "豹", "狼", "狗", "猫"],
+            狮: ["虎", "豹", "狼", "狗", "猫", "鼠"],
+            虎: ["豹", "狼", "狗", "猫", "鼠"],
+            豹: ["狼", "狗", "猫", "鼠"],
+            狼: ["狗", "猫", "鼠"],
+            狗: ["猫", "鼠"],
+            猫: ["鼠"],
+            鼠: ["象"]
+        };
+
+        const SIZE = 4;
+        let board = [], playerColor = null, turn = "player", selected = null, moveHints = [];
+
+        const shuffle = a => a.sort(() => Math.random() - 0.5);
+        const idx = (r, c) => r * SIZE + c;
+        const pos = i => [Math.floor(i / SIZE), i % SIZE];
+
+        const neighbors = i => {
+            const [r, c] = pos(i);
+            return [[r - 1, c], [r + 1, c], [r, c - 1], [r, c + 1]]
+                .filter(([r, c]) => r >= 0 && c >= 0 && r < SIZE && c < SIZE)
+                .map(([r, c]) => idx(r, c));
+        };
+
+        const canEat = (a, b) => a === b ? "tie" : beats[a]?.includes(b);
+
+        function init() {
+            let cards = [];
+            animals.forEach(a => {
+                cards.push({ animal: a, color: "red", open: false });
+                cards.push({ animal: a, color: "blue", open: false });
+            });
+            board = shuffle(cards);
+            render();
+        }
+
+        function getMoveHints(i) {
+            return neighbors(i).filter(n => {
+                const t = board[n];
+                if (!t) return true;
+                if (!t.open) return false;
+                return t.color !== playerColor;
+            });
+        }
+
+        function render() {
+            const el = document.getElementById("board");
+            el.innerHTML = "";
+            board.forEach((c, i) => {
+                const cell = document.createElement("div");
+                cell.className = "cell";
+                if (!c) { el.appendChild(cell); return; }
+
+                const card = document.createElement("div");
+                let cls = "card" + (c.open ? " open" : "");
+                if (i === selected) cls += " selected";
+                if (moveHints.includes(i)) cls += " moveable";
+                card.className = cls;
+
+                card.innerHTML = `
+<div class="back"></div>
+<div class="face ${c.color}">${c.animal}</div>`;
+                card.onclick = () => click(i);
+                cell.appendChild(card);
+                el.appendChild(cell);
+            });
+        }
+
+        function click(i) {
+            if (turn !== "player") return;
+            const c = board[i];
+
+            if (!c.open) {
+                c.open = true;
+                if (!playerColor) {
+                    playerColor = c.color;
+                    document.getElementById("info").innerText =
+                        `你是 ${playerColor === "red" ? "红" : "蓝"} 方`;
+                }
+                endTurn(); return;
+            }
+
+            if (c.color !== playerColor) return;
+
+            if (selected === null) {
+                selected = i;
+                moveHints = getMoveHints(i);
+                render(); return;
+            }
+
+            if (moveHints.includes(i)) {
+                move(selected, i);
+                selected = null;
+                moveHints = [];
+            }
+        }
+
+        function move(from, to) {
+            const a = board[from], b = board[to];
+
+            if (!b) {
+                board[to] = a; board[from] = null;
+            } else {
+                const r = canEat(a.animal, b.animal);
+                if (r === "tie") { board[from] = null; board[to] = null; }
+                else if (r) { board[to] = a; board[from] = null; }
+                else { board[from] = null; }
+            }
+            endTurn();
+        }
+
+        function endTurn() {
+            render(); checkWin();
+            turn = "ai";
+            setTimeout(aiMove, 600);
+        }
+
+        function aiMove() {
+            const ai = board.map((c, i) => c && c.open && c.color !== playerColor ? i : null).filter(i => i !== null);
+
+            // 吃子优先
+            for (let i of ai) {
+                for (let n of neighbors(i)) {
+                    const t = board[n];
+                    if (t && t.open && t.color === playerColor) {
+                        if (canEat(board[i].animal, t.animal)) {
+                            move(i, n); turn = "player"; return;
+                        }
+                    }
+                }
+            }
+
+            // 翻牌
+            const closed = board.map((c, i) => c && !c.open ? i : null).filter(i => i !== null);
+            if (closed.length) {
+                board[closed[Math.random() * closed.length | 0]].open = true;
+                turn = "player"; render(); return;
+            }
+
+            // 安全走一步
+            for (let i of ai) {
+                for (let n of neighbors(i)) {
+                    if (!board[n]) {
+                        move(i, n); turn = "player"; return;
+                    }
+                }
+            }
+            turn = "player";
+        }
+
+        function checkWin() {
+            let r = 0, b = 0;
+            board.forEach(c => {
+                if (!c) return;
+                c.color === "red" ? r++ : b++;
+            });
+            if (r === 0 || b === 0) {
+                alert(r === 0 ? "蓝方胜利" : "红方胜利");
+                location.reload();
+            }
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
