@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>工具箱</title>
-    <!-- 引入 FontAwesome 图标库 (用于辅助图标) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
@@ -14,7 +13,8 @@
             --card-border: rgba(255, 255, 255, 0.1);
             --text-main: #ffffff;
             --text-sub: rgba(255, 255, 255, 0.6);
-            --accent-color: #ff9800; /* 橙色点缀 */
+            --accent-color: #ff9800;
+            --list-item-bg: rgba(255, 255, 255, 0.03);
         }
 
         * {
@@ -37,25 +37,23 @@
 
         .container {
             width: 100%;
-            max-width: 480px; /* 限制最大宽度，模拟手机App体验 */
+            max-width: 480px;
         }
 
-        /* 顶部 Logo 区域 */
         .header {
             text-align: center;
             margin-bottom: 40px;
             margin-top: 20px;
         }
 
-        /* Logo 图片样式 */
         .logo-img {
             width: 100px;
             height: 100px;
-            object-fit: contain; /* 保持图片比例，不拉伸 */
+            object-fit: contain;
             border-radius: 20px;
             margin-bottom: 15px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            background: rgba(255,255,255,0.1); /* 图片未加载时的背景 */
+            background: rgba(255,255,255,0.1);
         }
 
         .title {
@@ -72,312 +70,166 @@
             color: var(--text-sub);
         }
 
-        /* 工具列表 */
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 两列布局 */
-            gap: 15px;
+        /* 列表容器 */
+        .tools-list {
+            width: 100%;
         }
 
-        /* 工具卡片 */
-        .tool-card {
-            background: var(--card-bg);
+        /* 列表项 */
+        .tool-item {
+            background: var(--list-item-bg);
             border: 1px solid var(--card-border);
             border-radius: 16px;
-            padding: 25px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
             text-decoration: none;
             color: var(--text-main);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            padding: 16px;
         }
 
-        .tool-card:active {
-            transform: scale(0.96);
+        .tool-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .tool-item:active {
+            transform: scale(0.98);
             background: rgba(255, 255, 255, 0.1);
         }
 
-        /* 卡片内图片样式 */
-        .card-icon-img {
-            width: 60px;
-            height: 60px;
+        /* 左侧图标区域 */
+        .item-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            margin-right: 16px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .item-icon img {
+            width: 100%;
+            height: 100%;
             object-fit: contain;
-            margin-bottom: 15px;
             border-radius: 12px;
         }
 
-        .card-title {
+        /* 中间内容区域 */
+        .item-content {
+            flex-grow: 1;
+        }
+
+        .item-title {
             font-size: 16px;
             font-weight: 600;
+            margin-bottom: 4px;
         }
 
-        .card-desc {
+        .item-desc {
             font-size: 12px;
             color: var(--text-sub);
-            margin-top: 4px;
         }
 
-        /* 装饰圆点 */
-        .decoration-dot {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background-color: var(--accent-color);
-            opacity: 0;
-            transition: opacity 0.3s;
+        /* 右侧箭头区域 */
+        .item-arrow {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-sub);
+            flex-shrink: 0;
+            margin-left: 8px;
         }
 
-        .tool-card:hover .decoration-dot {
-            opacity: 1;
+        .item-arrow i {
+            font-size: 14px;
         }
-
     </style>
 </head>
 <body>
-
-    <div class="container">
-        <!-- 头部：Logo + 标题 -->
-        <div class="header">
-            <!-- 替换这里：将你的工具箱Logo图片命名为 logo_toolbox.png -->
-            <img src="logo_toolbox.png" alt="工具箱Logo" class="logo-img" onerror="this.style.display='none'">
-            
-            <h1 class="title">工具箱</h1>
-            <p class="subtitle">实用工具 · 一触即达</p>
-        </div>
-
-        <!-- 工具列表 -->
-        <div class="tools-grid">
-            
-            <!-- 工具 1: 今日油价 -->
-            <a href="oil-price.html" class="tool-card">
-                <div class="decoration-dot"></div>
-                <!-- 替换这里：将你的油价蜗牛图片命名为 icon_oil.png -->
-                <img src="icon_oil.png" alt="今日油价" class="card-icon-img" onerror="this.src='https://via.placeholder.com/60?text=Icon'">
-                <div class="card-title">今日油价</div>
-                <div class="card-desc">全国实时油价查询</div>
-            </a>
-            <!-- 工具 2: 扫雷 -->
-            <a href="minesweeper.html" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="minesweeper.png" alt="扫雷" class="card-icon-img">
-                <div class="card-title">扫雷</div>
-                <div class="card-desc">娱乐一下吧</div>
-            </a> 
-            <!-- 工具 3: 水压套圈 -->
-            <a href="RetroWaterRingToss.html" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="minesweeper.png" alt="水压套圈" class="card-icon-img">
-                <div class="card-title">水压套圈</div>
-                <div class="card-desc">娱乐一下吧</div>
-            </a> 
-            <!-- 工具 4: 兽棋 -->
-            <a href="AnimalChess.html" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="minesweeper.png" alt="兽棋" class="card-icon-img">
-                <div class="card-title">兽棋</div>
-                <div class="card-desc">娱乐一下吧</div>
-            </a> 
-             <!-- 工具 5: 全景故宫 -->
-            <a href="https://pano.dpm.org.cn" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="https://pano.dpm.org.cn/resource/favicon.ico" alt="全景故宫" class="card-icon-img">
-                <div class="card-title">全景故宫</div>
-                <div class="card-desc">故宫博物院VR实景项目</div>
-            </a> 
-             <!-- 工具 6: 故宫博物院数字文物库 -->
-            <a href="https://zm-digicol.dpm.org.cn" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="https://zm-digicol.dpm.org.cn/images/logo_center_v1.png" alt="故宫博物院数字文物库" class="card-icon-img">
-                <div class="card-title">故宫博物院数字文物库</div>
-                <div class="card-desc">高清数字影像</div>
-            </a> 
-            <!-- 工具 7: 陕西博物馆数字展厅 -->
-            <a href="https://www.sxhm.com/online.html" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="https://www.sxhm.com/favicon.ico" alt="陕西博物馆数字展厅" class="card-icon-img">
-                <div class="card-title">陕西博物馆数字展厅</div>
-                <div class="card-desc">虚拟游览馆藏珍品</div>
-            </a> 
-            <!-- 工具 8: 观沧海 -->
-            <a href="https://ageeye.app.ditushu.com" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="https://ageeye-media.oss-cn-hangzhou.aliyuncs.com/logo/ageeye-large.png" alt="观沧海" class="card-icon-img">
-                <div class="card-title">观沧海</div>
-                <div class="card-desc">知识地图共享平台</div>
-            </a> 
-            <!-- 工具 9: 煎蛋 -->
-            <a href="https://jandan.net" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="https://jandan.net/wp-content/themes/jandan2025/images/logo2025.png" alt="煎蛋" class="card-icon-img">
-                <div class="card-title">煎蛋</div>
-                <div class="card-desc">地球上没有的新鲜事</div>
-            </a> 
-            <!-- 工具 10: FUUN -->
-            <a href="https://fuun.fun/" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="https://fuun.fun/favicon-32x32.png" alt="FUUN" class="card-icon-img">
-                <div class="card-title">FUUN</div>
-                <div class="card-desc">奇趣网站收藏家</div>
-            </a> 
-            <!-- 工具 11: 中国科普博览 -->
-            <a href="http://www.kepu.net.cn" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="http://www.kepu.net.cn/images/ico.jpg" alt="中国科普博览" class="card-icon-img">
-                <div class="card-title">中国科普博览</div>
-                <div class="card-desc">中国科普博览</div>
-            </a> 
-            <!-- 工具 12: 全历史 -->
-            <a href="https://m2.allhistory.com" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="https://m2.allhistory.com/favicon.ico" alt="全历史" class="card-icon-img">
-                <div class="card-title">全历史</div>
-                <div class="card-desc">用现代化方式展示历史的网站</div>
-            </a>
-            <!-- 工具 13: TestTubeGames -->
-            <a href="https://www.testtubegames.com" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="https://m2.allhistory.com/favicon.ico" alt="TestTubeGames" class="card-icon-img">
-                <div class="card-title">TestTubeGames</div>
-                <div class="card-desc">多款基于真实物理、数学和生命科学原理的互动小游戏</div>
-            </a>
-            <!-- 工具 14: CrazyGames -->
-            <a href="https://www.crazygames.com" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="https://www.crazygames.com/images/logo/logo-ziggy.svg" alt="CrazyGames" class="card-icon-img">
-                <div class="card-title">CrazyGames</div>
-                <div class="card-desc">各类游戏合集</div>
-            </a>
-            <!-- 工具 15: wikiHow -->
-            <a href="https://zh.wikihow.com" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="https://zh.wikihow.com/skins/owl/images/wikihow_logo_intl.png" alt="wikiHow" class="card-icon-img">
-                <div class="card-title">wikiHow</div>
-                <div class="card-desc">你可以信赖的万事指南</div>
-            </a>
-            <!-- 工具 16: FC在线模拟 -->
-            <a href="https://fc.wan1234.com" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="https://fc.wan1234.com/favicon.ico" alt="FC在线模拟" class="card-icon-img">
-                <div class="card-title">FC在线模拟器</div>
-                <div class="card-desc">模拟FC游戏</div>
-            </a>
-            <!-- 工具 17: 贪吃蛇在线版 -->
-            <a href="http://slither.com/io" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="http://slither.io/s/favicon.png" alt="贪吃蛇" class="card-icon-img">
-                <div class="card-title">贪吃蛇</div>
-                <div class="card-desc">贪吃蛇游戏</div>
-            </a>
-            <!-- 工具 18: orber -->
-            <a href="https://orber.im" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="http://slither.io/s/favicon.png" alt="orber" class="card-icon-img">
-                <div class="card-title">orber</div>
-                <div class="card-desc">一个将数字序列和寻路结合的益智小游戏</div>
-            </a>
-            <!-- 工具 19: FamilyFunHub -->
-            <a href="https://familyfunhub.com/zh" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="http://slither.io/s/favicon.png" alt="FamilyFunHub" class="card-icon-img">
-                <div class="card-title">FamilyFunHub</div>
-                <div class="card-desc">趣味教育游戏平台</div>
-            </a>
-            <!-- 工具 20: 便便计算器 -->
-            <a href="https://thunderous-trifle-3dd05e.netlify.app" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="http://slither.io/s/favicon.png" alt="便便计算器" class="card-icon-img">
-                <div class="card-title">便便计算器</div>
-                <div class="card-desc">了解你的如厕习惯</div>
-            </a>
-            <!-- 工具 21: 穷游 -->
-            <a href="https://www.qyer.com" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="https://www.qyer.com/favicon.ico" alt="穷游" class="card-icon-img">
-                <div class="card-title">穷游</div>
-                <div class="card-desc">很多超详细的旅游攻略</div>
-            </a>
-            <!-- 工具 21: protobot -->
-            <a href="https://protobot.org/#zh" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="https://www.qyer.com/favicon.ico" alt="protobot" class="card-icon-img">
-                <div class="card-title">protobot</div>
-                <div class="card-desc">随机无厘头任务挑战</div>
-            </a>
-            <!-- 工具 22: 爱折纸 -->
-            <a href="https://www.aizhezhi.com/index.html" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="https://www.aizhezhi.com/favicon.ico" alt="爱折纸" class="card-icon-img">
-                <div class="card-title">爱折纸</div>
-                <div class="card-desc">折纸大全图解</div>
-            </a>
-            <!-- 工具 23: 全国地铁 -->
-            <a href="https://subway.cuvii.dev" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="https://subway.cuvii.dev/favicon.ico" alt="全国地铁" class="card-icon-img">
-                <div class="card-title">全国地铁</div>
-                <div class="card-desc">全国地铁可视化</div>
-            </a>
-            <!-- 工具 24: Best Party Games -->
-            <a href="https://www.bestpartygames.net/zh" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="https://subway.cuvii.dev/favicon.ico" alt="免费派对游戏" class="card-icon-img">
-                <div class="card-title">免费派对游戏</div>
-                <div class="card-desc">免费派对游戏合集</div>
-            </a>
-            <!-- 工具 25: 猜电影 -->
-            <a href="https://moviegame.top" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="https://moviegame.top/favicon.ico" alt="猜电影" class="card-icon-img">
-                <div class="card-title">猜电影</div>
-                <div class="card-desc">猜电影的游戏</div>
-            </a>
-            <!-- 工具 26: 文字游戏 -->
-            <a href="http://tinywaste.maougame.com" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="https://moviegame.top/favicon.ico" alt="文字游戏" class="card-icon-img">
-                <div class="card-title">文字游戏</div>
-                <div class="card-desc">摸鱼文字游戏</div>
-            </a>
-            <!-- 工具 27: 益智小游戏 -->
-            <a href="https://gridspech.baublejar.com" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="https://gridspech.baublejar.com/assets/favicon-C29Vu5tQ.png" alt="益智小游戏" class="card-icon-img">
-                <div class="card-title">益智小游戏</div>
-                <div class="card-desc">益智小游戏</div>
-            </a>
-            <!-- 工具 28: 涂色小游戏 -->
-            <a href="https://www.coloringwell.com" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="https://www.coloringwell.com/logo.svg" alt="涂色小游戏" class="card-icon-img">
-                <div class="card-title">涂色小游戏</div>
-                <div class="card-desc">涂色小游戏</div>
-            </a>
-            <!-- 工具 n: 占位符 (你可以复制这个块添加更多工具) -->
-            <!-- 
-            <a href="#" class="tool-card">http://tinywaste.maougame.com 
-                <div class="decoration-dot"></div>
-                <img src="icon_calendar.png" alt="万年历" class="card-icon-img">
-                <div class="card-title">万年历</div>
-                <div class="card-desc">节假日查询</div>
-            </a> 
-            -->
-            <!-- 工具 : 更多 -->
-            <a href="https://tool.browser.qq.com" class="tool-card">
-                <div class="decoration-dot"></div>
-                <img src="icon_bangxiaomang.png" alt="更多" class="card-icon-img">
-                <div class="card-title">更多</div>
-                <div class="card-desc">腾讯帮小忙在线工具箱</div>
-            </a> 
-        </div>
+<div class="container">
+    <!-- 头部：Logo + 标题 -->
+    <div class="header">
+        <img src="logo_toolbox.png" alt="工具箱Logo" class="logo-img" onerror="this.style.display='none'">
+        <h1 class="title">工具箱</h1>
+        <p class="subtitle">实用工具 · 一触即达</p>
     </div>
 
+    <!-- 工具列表 -->
+    <div class="tools-list" id="toolsList">
+        <!-- 动态内容将通过JavaScript生成 -->
+    </div>
+</div>
+
+<script>
+    // 工具数据结构
+    const toolsData = [
+        { id: 1, title: "今日油价", desc: "全国实时油价查询", icon: "icon_oil.png", link: "oil-price.html" },
+        { id: 2, title: "扫雷", desc: "娱乐一下吧", icon: "minesweeper.png", link: "minesweeper.html" },
+        { id: 3, title: "水压套圈", desc: "娱乐一下吧", icon: "water-ring-toss.png", link: "RetroWaterRingToss.html" },
+        { id: 4, title: "兽棋", desc: "娱乐一下吧", icon: "animal-chess.png", link: "AnimalChess.html" },
+        { id: 5, title: "全景故宫", desc: "故宫博物院VR实景项目", icon: "https://pano.dpm.org.cn/resource/favicon.ico", link: "https://pano.dpm.org.cn" },
+        { id: 6, title: "故宫博物院数字文物库", desc: "高清数字影像", icon: "https://zm-digicol.dpm.org.cn/images/logo_center_v1.png", link: "https://zm-digicol.dpm.org.cn" },
+        { id: 7, title: "陕西博物馆数字展厅", desc: "虚拟游览馆藏珍品", icon: "https://www.sxhm.com/favicon.ico", link: "https://www.sxhm.com/online.html" },
+        { id: 8, title: "观沧海", desc: "知识地图共享平台", icon: "https://ageeye-media.oss-cn-hangzhou.aliyuncs.com/logo/ageeye-large.png", link: "https://ageeye.app.ditushu.com" },
+        { id: 9, title: "煎蛋", desc: "地球上没有的新鲜事", icon: "https://jandan.net/wp-content/themes/jandan2025/images/logo2025.png", link: "https://jandan.net" },
+        { id: 10, title: "FUUN", desc: "奇趣网站收藏家", icon: "https://fuun.fun/favicon-32x32.png", link: "https://fuun.fun/" },
+        { id: 11, title: "中国科普博览", desc: "中国科普博览", icon: "http://www.kepu.net.cn/images/ico.jpg", link: "http://www.kepu.net.cn" },
+        { id: 12, title: "全历史", desc: "用现代化方式展示历史的网站", icon: "https://m2.allhistory.com/favicon.ico", link: "https://m2.allhistory.com" },
+        { id: 13, title: "TestTubeGames", desc: "多款基于真实物理、数学和生命科学原理的互动小游戏", icon: "https://www.testtubegames.com/favicon.ico", link: "https://www.testtubegames.com" },
+        { id: 14, title: "CrazyGames", desc: "各类游戏合集", icon: "https://www.crazygames.com/images/logo/logo-ziggy.svg", link: "https://www.crazygames.com" },
+        { id: 15, title: "wikiHow", desc: "你可以信赖的万事指南", icon: "https://zh.wikihow.com/skins/owl/images/wikihow_logo_intl.png", link: "https://zh.wikihow.com" },
+        { id: 16, title: "FC在线模拟器", desc: "模拟FC游戏", icon: "https://fc.wan1234.com/favicon.ico", link: "https://fc.wan1234.com" },
+        { id: 17, title: "贪吃蛇", desc: "贪吃蛇游戏", icon: "https://slither.io/s/favicon.png", link: "https://slither.io" },
+        { id: 18, title: "orber", desc: "一个将数字序列和寻路结合的益智小游戏", icon: "https://orber.im/favicon.ico", link: "https://orber.im" },
+        { id: 19, title: "FamilyFunHub", desc: "趣味教育游戏平台", icon: "https://familyfunhub.com/favicon.ico", link: "https://familyfunhub.com/zh" },
+        { id: 20, title: "便便计算器", desc: "了解你的如厕习惯", icon: "https://thunderous-trifle-3dd05e.netlify.app/favicon.ico", link: "https://thunderous-trifle-3dd05e.netlify.app" },
+        { id: 21, title: "穷游", desc: "很多超详细的旅游攻略", icon: "https://www.qyer.com/favicon.ico", link: "https://www.qyer.com" },
+        { id: 22, title: "protobot", desc: "随机无厘头任务挑战", icon: "https://protobot.org/favicon.ico", link: "https://protobot.org/#zh" },
+        { id: 23, title: "爱折纸", desc: "折纸大全图解", icon: "https://www.aizhezhi.com/favicon.ico", link: "https://www.aizhezhi.com/index.html" },
+        { id: 24, title: "全国地铁", desc: "全国地铁可视化", icon: "https://subway.cuvii.dev/favicon.ico", link: "https://subway.cuvii.dev" },
+        { id: 25, title: "免费派对游戏", desc: "免费派对游戏合集", icon: "https://www.bestpartygames.net/favicon.ico", link: "https://www.bestpartygames.net/zh" },
+        { id: 26, title: "猜电影", desc: "猜电影的游戏", icon: "https://moviegame.top/favicon.ico", link: "https://moviegame.top" },
+        { id: 27, title: "文字游戏", desc: "摸鱼文字游戏", icon: "http://tinywaste.maougame.com/favicon.ico", link: "http://tinywaste.maougame.com" },
+        { id: 28, title: "益智小游戏", desc: "益智小游戏", icon: "https://gridspech.baublejar.com/assets/favicon-C29Vu5tQ.png", link: "https://gridspech.baublejar.com" },
+        { id: 29, title: "涂色小游戏", desc: "涂色小游戏", icon: "https://www.coloringwell.com/logo.svg", link: "https://www.coloringwell.com" },
+        { id: 30, title: "更多", desc: "腾讯帮小忙在线工具箱", icon: "icon_bangxiaomang.png", link: "https://tool.browser.qq.com" }
+    ];
+
+    // 渲染工具列表
+    function renderToolsList() {
+        const toolsContainer = document.getElementById('toolsList');
+
+        toolsData.forEach(tool => {
+            const toolElement = document.createElement('a');
+            toolElement.href = tool.link;
+            toolElement.className = 'tool-item';
+
+            // 使用模板字符串构建HTML
+            toolElement.innerHTML = `
+                <div class="item-icon">
+                    <img src="${tool.icon}" alt="${tool.title}" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=Icon';">
+                </div>
+                <div class="item-content">
+                    <div class="item-title">${tool.title}</div>
+                    <div class="item-desc">${tool.desc}</div>
+                </div>
+                <div class="item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            `;
+
+            toolsContainer.appendChild(toolElement);
+        });
+    }
+
+    // 页面加载完成后渲染列表
+    document.addEventListener('DOMContentLoaded', renderToolsList);
+</script>
 </body>
 </html>
